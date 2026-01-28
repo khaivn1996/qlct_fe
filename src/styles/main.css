@@ -1,0 +1,477 @@
+/* Kwallet Premium Design System */
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap");
+
+:root {
+  /* Default to Dark Mode Variables */
+  --bg-core: #0f172a;
+  --bg-deep: #020617;
+  --bg-glass: rgba(30, 41, 59, 0.7);
+  --bg-glass-heavy: rgba(15, 23, 42, 0.85);
+
+  /* Accents */
+  --primary-color: #6366f1; /* Indigo */
+  --primary-glow: rgba(99, 102, 241, 0.4);
+  --secondary-color: #ec4899; /* Pink */
+  --accent-color: #8b5cf6; /* Violet */
+
+  /* Status */
+  --success-color: #10b981;
+  --warning-color: #f59e0b;
+  --danger-color: #ef4444;
+
+  /* Income/Expense */
+  --income-color: #10b981;
+  --expense-color: #ef4444;
+
+  /* Typography */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+
+  /* Spacing & Borders */
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --border-glass: rgba(255, 255, 255, 0.08);
+
+  /* Sidebar */
+  --sidebar-width: 260px;
+
+  /* Semantic Colors - Dark Default */
+  --bg-input: rgba(15, 23, 42, 0.6);
+  --bg-input-hover: rgba(30, 41, 59, 0.8);
+  --bg-card-gradient: linear-gradient(
+    145deg,
+    rgba(30, 41, 59, 0.7) 0%,
+    rgba(15, 23, 42, 0.6) 100%
+  );
+  --bg-card-hover: linear-gradient(
+    145deg,
+    rgba(40, 50, 70, 0.8) 0%,
+    rgba(20, 30, 50, 0.7) 100%
+  );
+  --logo-gradient: linear-gradient(135deg, #fff 0%, #94a3b8 100%);
+  --title-gradient: linear-gradient(to right, #fff, #94a3b8);
+}
+
+/* Light Mode Overrides */
+[data-theme="light"] {
+  --bg-core: #f1f5f9; /* Slate-100 (More visible grey than Slate-50) */
+  --bg-deep: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.75);
+  --bg-glass-heavy: rgba(255, 255, 255, 0.95);
+
+  /* Typography */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-tertiary: #94a3b8;
+
+  /* Borders */
+  --border-glass: rgba(0, 0, 0, 0.06);
+
+  /* Accents */
+  --primary-glow: rgba(99, 102, 241, 0.15);
+
+  /* Semantic Colors - Light */
+  --bg-input: #ffffff;
+  --bg-input-hover: #f1f5f9;
+  --bg-card-gradient: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+  --bg-card-hover: linear-gradient(145deg, #ffffff 0%, #e2e8f0 100%);
+  --logo-gradient: linear-gradient(135deg, #4f46e5 0%, #0f172a 100%);
+  --title-gradient: linear-gradient(to right, #1e293b, #64748b);
+}
+
+/* Cancel Button Style */
+.cancel-btn {
+  background: transparent !important;
+  border: 1px solid var(--border-glass) !important;
+  color: var(--text-secondary) !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: var(--text-primary) !important;
+  border-color: var(--text-primary) !important;
+}
+
+[data-theme="light"] .cancel-btn:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Outfit", sans-serif;
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --- Premium Scrollbar --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* --- Glassmorphism Utilities --- */
+.glass-panel {
+  background: var(--bg-glass-heavy);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+}
+
+.glass-card {
+  background: var(--bg-card-gradient);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-glow);
+  background: var(--bg-card-hover);
+}
+
+/* --- Animations --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* --- Element Plus Overrides --- */
+/* Inputs */
+.el-input__wrapper {
+  background-color: var(--bg-input) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: 8px !important;
+  padding: 8px 12px !important;
+  transition: all 0.3s ease !important;
+}
+.el-input__wrapper:hover,
+.el-input__wrapper.is-focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 2px var(--primary-glow) !important;
+}
+.el-input__inner {
+  color: var(--text-primary) !important;
+  font-family: "Outfit", sans-serif !important;
+}
+
+/* Buttons */
+.el-button--primary {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--accent-color) 100%
+  ) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.5px !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 4px 12px var(--primary-glow) !important;
+}
+.el-button--primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 16px var(--primary-glow) !important;
+  opacity: 0.9 !important;
+}
+
+/* Dialogs */
+.el-dialog {
+  background: var(--bg-deep) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+.el-dialog__title {
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+}
+.el-dialog__body {
+  color: var(--text-secondary) !important;
+}
+
+/* Helper Classes */
+.income {
+  color: var(--income-color) !important;
+}
+.expense {
+  color: var(--expense-color) !important;
+}
+.text-gradient {
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  background-image: linear-gradient(
+    135deg,
+    var(--text-primary) 30%,
+    var(--text-secondary) 100%
+  );
+}
+
+.page-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin: 0;
+  background: var(--title-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --- Global Input Overrides --- */
+.el-input__wrapper,
+.el-textarea__inner {
+  background-color: var(--bg-input) !important;
+  box-shadow: none !important;
+  border: 1px solid var(--border-glass) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-input__inner {
+  color: var(--text-primary) !important;
+}
+
+/* Remove default white background from select dropdowns */
+.el-select-dropdown,
+.el-picker-panel,
+.el-cascader-panel {
+  background-color: var(--bg-deep) !important;
+  border: 1px solid var(--border-glass) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--text-secondary) !important;
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: var(--primary-color) !important;
+  background-color: rgba(99, 102, 241, 0.1) !important;
+  font-weight: 600;
+}
+
+/* Glass Classes */
+.glass-dialog {
+  background: var(--bg-glass-heavy) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid var(--border-glass) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
+
+.glass-dropdown.el-popper {
+  background: var(--bg-deep) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--border-glass) !important;
+}
+
+.glass-input .el-input__wrapper {
+  background-color: var(--bg-input) !important;
+  transition: all 0.3s ease;
+}
+
+.glass-input .el-input__wrapper:hover,
+.glass-input .el-input__wrapper.is-focus {
+  background-color: var(--bg-input-hover) !important;
+  border-color: var(--primary-color) !important;
+}
+
+/* Date Picker adjustments */
+.el-date-table td.current:not(.disabled) span {
+  background-color: var(--primary-color) !important;
+}
+
+.el-date-table td.today span {
+  color: var(--primary-color) !important;
+}
+
+.el-picker-panel__icon-btn {
+  color: var(--text-secondary) !important;
+}
+
+.el-date-picker__header-label {
+  color: var(--text-primary) !important;
+}
+
+/* Popovers and Dropdowns */
+.el-popper.is-light {
+  background: var(--bg-deep) !important;
+  border: 1px solid var(--border-glass) !important;
+}
+
+.el-picker-panel {
+  background: var(--bg-deep) !important;
+  border: 1px solid var(--border-glass) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-date-table td.current:not(.disabled) span {
+  background-color: var(--primary-color) !important;
+}
+
+.el-month-table td.current:not(.disabled) .cell {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
+}
+
+.el-date-picker__header-label {
+  color: var(--text-primary) !important;
+}
+
+.el-select-dropdown__item {
+  color: var(--text-secondary) !important;
+}
+
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.el-select-dropdown__item.selected {
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+/* Glass Popover custom class */
+.glass-popover.el-popper {
+  background: var(--bg-glass-heavy) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--border-glass) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Glass Dropdown custom class */
+.glass-dropdown.el-popper {
+  background: var(--bg-deep) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  backdrop-filter: blur(16px) !important;
+  border: 1px solid var(--border-glass) !important;
+}
+
+.glass-dropdown .el-select-dropdown__item {
+  color: var(--text-secondary);
+}
+
+.glass-dropdown .el-select-dropdown__item.hover,
+.glass-dropdown .el-select-dropdown__item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-primary);
+}
+
+/* Fix Popper Arrow to match dark background */
+.el-popper__arrow::before {
+  background: var(--bg-deep) !important;
+  border-color: var(--border-glass) !important;
+}
+
+/* Force Select Input to be Transparent/Dark - Nuclear Option */
+.el-select {
+  --el-select-input-color: var(--text-primary) !important;
+  --el-select-input-focus-border-color: var(--primary-color) !important;
+  --el-select-bg-color: transparent !important;
+  --el-fill-color-blank: transparent !important;
+}
+
+.el-select__wrapper {
+  background-color: var(--bg-input) !important;
+  box-shadow: 0 0 0 1px var(--border-glass) inset !important;
+  color: var(--text-primary) !important;
+}
+
+.el-select__wrapper:hover {
+  background-color: var(--bg-input-hover) !important;
+  box-shadow: 0 0 0 1px var(--primary-color) inset !important;
+}
+
+.el-select__wrapper.is-focused,
+.el-select__wrapper.is-focus {
+  background-color: var(--bg-input-hover) !important;
+  box-shadow: 0 0 0 1px var(--primary-color) inset !important;
+}
+
+/* Fix Dropdown Item Hover/Selected Backgrounds */
+.el-select-dropdown__item.hover,
+.el-select-dropdown__item:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+}
+
+.el-select-dropdown__item.selected {
+  background-color: rgba(99, 102, 241, 0.2) !important;
+  color: var(--primary-color) !important;
+  font-weight: 600;
+}
+
+/* Ensure the popper content itself is dark */
+.el-popper.is-light,
+.el-select__popper.el-popper {
+  background: var(--bg-deep) !important;
+  border: 1px solid var(--border-glass) !important;
+}
