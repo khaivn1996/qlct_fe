@@ -343,6 +343,7 @@ function handleTransactionSaved() {
 .user-avatar {
   width: 64px;
   height: 64px;
+  flex-shrink: 0;
   border-radius: 50%;
   background: var(--bg-card);
   border: 1px solid var(--border-glass);
