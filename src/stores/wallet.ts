@@ -11,9 +11,21 @@ export const useWalletStore = defineStore("wallet", () => {
   async function fetchWallets() {
     loading.value = true;
     try {
-      wallets.value = await walletApi.getAll();
-      if (wallets.value.length > 0 && !currentWallet.value) {
-        currentWallet.value = wallets.value[0];
+      const res = await walletApi.getAll();
+      wallets.value = res;
+
+      if (wallets.value.length > 0) {
+        if (!currentWallet.value) {
+          currentWallet.value = wallets.value[0];
+        } else {
+          // Update current wallet reference to reflect changes (balance, etc)
+          const found = wallets.value.find(
+            (w) => w.id === currentWallet.value?.id,
+          );
+          if (found) {
+            currentWallet.value = found;
+          }
+        }
       }
       return wallets.value;
     } finally {

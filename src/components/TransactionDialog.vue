@@ -3,7 +3,8 @@
     :model-value="visible"
     @update:model-value="$emit('update:visible', $event)"
     :title="transaction ? 'Sửa giao dịch' : 'Thêm giao dịch'"
-    width="480px"
+    width="90%"
+    style="max-width: 480px"
     :close-on-click-modal="false"
     class="glass-dialog"
   >
@@ -285,6 +286,13 @@ watch(
 .form-row {
   display: flex;
   gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
 }
 
 .option-icon-wrapper {

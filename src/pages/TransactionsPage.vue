@@ -286,6 +286,9 @@ watch(
   background: rgba(15, 23, 42, 0.6);
   margin-bottom: 24px;
   width: fit-content;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tab-item {
@@ -310,13 +313,15 @@ watch(
 
 /* Summary Cards */
 .summary-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 40px;
 }
 
 .stat-card {
+  flex: 1 1 300px;
+  min-width: 0;
   padding: 20px;
   display: flex;
   align-items: center;

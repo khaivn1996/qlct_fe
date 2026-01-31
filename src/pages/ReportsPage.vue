@@ -22,7 +22,7 @@
     <template v-else-if="report">
       <!-- Summary Cards -->
       <div
-        class="summary-cards animate-fade-in-up"
+        class="summary-cards animate-fade-in-up text-xs!"
         style="animation-delay: 0.1s"
       >
         <div class="glass-card stat-card income">
@@ -148,17 +148,28 @@ const loading = ref(false);
 const selectedMonth = ref(formatMonth(new Date()));
 const report = ref<MonthlyReport | null>(null);
 const icons: any = LucideIcons;
+const windowWidth = ref(window.innerWidth);
+
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth;
+};
+
+onMounted(() => {
+  window.addEventListener("resize", updateWidth);
+  fetchReport();
+});
 
 const chartOption = computed(() => {
   if (!report.value || report.value.expenseByCategory.length === 0) {
     return {};
   }
 
-  const data = report.value.expenseByCategory.map((item) => ({
+  const isMobile = windowWidth.value <= 768;
+
+  const data = report.value.expenseByCategory.map((item: any) => ({
     name: item.name,
     value: parseInt(item.total),
   }));
-
   return {
     tooltip: {
       trigger: "item",
@@ -172,27 +183,29 @@ const chartOption = computed(() => {
       },
     },
     legend: {
-      orient: "vertical",
-      right: 0,
-      top: "center",
+      orient: isMobile ? "horizontal" : "vertical",
+      right: isMobile ? "center" : 0,
+      bottom: isMobile ? 0 : "center",
+      top: isMobile ? "bottom" : "center",
       textStyle: {
         color: "#94a3b8",
         fontSize: 12,
       },
       itemWidth: 12,
       itemHeight: 12,
+      padding: [0, 0, 0, 0],
     },
     series: [
       {
         name: "Chi tiêu",
         type: "pie",
-        radius: ["50%", "80%"],
-        center: ["30%", "50%"],
+        radius: isMobile ? ["40%", "65%"] : ["50%", "80%"],
+        center: isMobile ? ["50%", "45%"] : ["30%", "50%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 8,
-          borderColor: "#0f172a",
-          borderWidth: 4,
+          borderColor: "transparent",
+          borderWidth: 0,
         },
         label: {
           show: false,
@@ -200,7 +213,7 @@ const chartOption = computed(() => {
         emphasis: {
           label: {
             show: true,
-            fontSize: 16,
+            fontSize: isMobile ? 14 : 16,
             fontWeight: "bold",
             color: "#fff",
           },
@@ -258,6 +271,17 @@ onMounted(() => {
 <style scoped>
 .page-header {
   margin-bottom: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column;
+    align-items: center;
+  }
 }
 
 .month-picker-wrapper {
@@ -276,13 +300,15 @@ onMounted(() => {
 }
 
 .summary-cards {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 32px;
 }
 
 .stat-card {
+  flex: 1 1 300px;
+  min-width: 0; /* Prevent flex overflow */
   padding: 24px;
   display: flex;
   align-items: center;

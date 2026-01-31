@@ -3,14 +3,29 @@
     <!-- Ambient Background -->
     <div class="ambient-bg"></div>
 
+    <!-- Mobile Backdrop -->
+    <div
+      class="mobile-backdrop"
+      v-if="isMobileOpen"
+      @click="isMobileOpen = false"
+    ></div>
+
     <!-- Sidebar -->
-    <aside class="sidebar glass-panel" :class="{ collapsed: isCollapsed }">
+    <aside
+      class="sidebar glass-panel"
+      :class="{
+        collapsed: isCollapsed && !isMobile,
+        'mobile-open': isMobileOpen,
+      }"
+    >
       <div class="sidebar-header">
-        <div class="logo" @click="toggleSidebar">
-          <div class="logo-icon">
-            <el-icon size="24"><Wallet /></el-icon>
+        <div class="logo-wrapper">
+          <div class="logo">
+            <div class="logo-icon">
+              <el-icon size="24"><Wallet /></el-icon>
+            </div>
+            <span class="logo-text" v-show="!isCollapsed">Kwallet</span>
           </div>
-          <span class="logo-text" v-show="!isCollapsed">Kwallet</span>
         </div>
       </div>
 
@@ -19,6 +34,7 @@
           to="/transactions"
           class="nav-item"
           :class="{ active: route.path === '/transactions' }"
+          @click="handleNavClick"
         >
           <el-icon><List /></el-icon>
           <span v-show="!isCollapsed">Giao dịch</span>
@@ -27,6 +43,7 @@
           to="/categories"
           class="nav-item"
           :class="{ active: route.path === '/categories' }"
+          @click="handleNavClick"
         >
           <el-icon><Grid /></el-icon>
           <span v-show="!isCollapsed">Danh mục</span>
@@ -35,6 +52,7 @@
           to="/reports"
           class="nav-item"
           :class="{ active: route.path === '/reports' }"
+          @click="handleNavClick"
         >
           <el-icon><PieChart /></el-icon>
           <span v-show="!isCollapsed">Báo cáo</span>
@@ -73,6 +91,9 @@
     <div class="main-content">
       <!-- Header -->
       <header class="main-header glass-panel">
+        <div class="mobile-menu-btn" @click="toggleSidebar">
+          <el-icon size="24"><Menu /></el-icon>
+        </div>
         <div class="wallet-info" v-if="walletStore.currentWallet">
           <div class="wallet-name">
             <div class="wallet-icon-wrapper">
@@ -142,6 +163,7 @@ import {
   Plus,
   Sun,
   Moon,
+  Menu,
 } from "lucide-vue-next";
 import { useAuthStore } from "@/stores/auth";
 import { useWalletStore } from "@/stores/wallet";
@@ -158,11 +180,31 @@ const categoryStore = useCategoryStore();
 const { theme, toggleTheme } = useTheme();
 
 const isCollapsed = ref(false);
+const isMobileOpen = ref(false);
+const isMobile = ref(window.innerWidth <= 768);
 const showAddTransaction = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
 
 function toggleSidebar() {
-  isCollapsed.value = !isCollapsed.value;
+  if (isMobile.value) {
+    isMobileOpen.value = !isMobileOpen.value;
+  } else {
+    isCollapsed.value = !isCollapsed.value;
+  }
+}
+
+// Handle resize
+window.addEventListener("resize", () => {
+  isMobile.value = window.innerWidth <= 768;
+  if (!isMobile.value) {
+    isMobileOpen.value = false;
+  }
+});
+
+function handleNavClick() {
+  if (isMobile.value) {
+    isMobileOpen.value = false;
+  }
 }
 
 function triggerFileUpload() {
@@ -447,6 +489,22 @@ function handleTransactionSaved() {
 }
 
 /* ... keep existing styles below if needed, but we are appending ... */
+.mobile-menu-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 8px;
+  margin-right: 12px;
+  color: var(--text-primary);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.mobile-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
 .main-header {
   height: 80px;
   padding: 0 40px;
@@ -572,5 +630,109 @@ function handleTransactionSaved() {
 .sidebar.collapsed .user-avatar {
   width: 40px;
   height: 40px;
+}
+
+/* Mobile Responsive */
+.mobile-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 90;
+}
+
+.menu-toggle {
+  display: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+}
+
+.logo-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    height: 100vh;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
+    z-index: 99;
+  }
+
+  .sidebar.mobile-open {
+    left: 0;
+  }
+
+  .mobile-backdrop {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: flex; /* Keep this for the one inside sidebar if used to close */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-header {
+    padding: 0 12px;
+    justify-content: space-between;
+    gap: 8px; /* Add gap for tight spaces */
+  }
+
+  .logo-wrapper {
+    gap: 16px;
+  }
+
+  /* Hide "Thêm giao dịch" text on mobile */
+  .add-btn span {
+    display: none;
+  }
+
+  .add-btn {
+    padding: 0 12px; /* Reduce padding since text is gone */
+  }
+
+  /* Make wallet info more compact */
+  .wallet-info {
+    gap: 10px;
+    padding: 6px 12px;
+  }
+
+  .wallet-divider {
+    display: none; /* Hide divider on small screens */
+  }
+
+  .balance-label {
+    display: none; /* Hide "Số dư" label */
+  }
+
+  .wallet-balance {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  /* Show logo in header on mobile if needed, 
+     but currently logo is in sidebar. 
+     We might need to adjust header layout */
+
+  .logo {
+    display: flex; /* Sidebar logo visible when open */
+  }
 }
 </style>
