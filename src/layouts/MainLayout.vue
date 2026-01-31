@@ -4,13 +4,13 @@
     <div class="ambient-bg"></div>
 
     <!-- Sidebar -->
-    <aside class="sidebar glass-panel">
+    <aside class="sidebar glass-panel" :class="{ collapsed: isCollapsed }">
       <div class="sidebar-header">
-        <div class="logo">
+        <div class="logo" @click="toggleSidebar">
           <div class="logo-icon">
             <el-icon size="24"><Wallet /></el-icon>
           </div>
-          <span class="logo-text">Kwallet</span>
+          <span class="logo-text" v-show="!isCollapsed">Kwallet</span>
         </div>
       </div>
 
@@ -21,7 +21,7 @@
           :class="{ active: route.path === '/transactions' }"
         >
           <el-icon><List /></el-icon>
-          <span>Giao dịch</span>
+          <span v-show="!isCollapsed">Giao dịch</span>
         </router-link>
         <router-link
           to="/categories"
@@ -29,7 +29,7 @@
           :class="{ active: route.path === '/categories' }"
         >
           <el-icon><Grid /></el-icon>
-          <span>Danh mục</span>
+          <span v-show="!isCollapsed">Danh mục</span>
         </router-link>
         <router-link
           to="/reports"
@@ -37,7 +37,7 @@
           :class="{ active: route.path === '/reports' }"
         >
           <el-icon><PieChart /></el-icon>
-          <span>Báo cáo</span>
+          <span v-show="!isCollapsed">Báo cáo</span>
         </router-link>
       </nav>
 
@@ -59,7 +59,7 @@
               @change="handleFileChange"
             />
           </div>
-          <div class="user-info">
+          <div class="user-info" v-if="!isCollapsed">
             <span class="user-email">{{ authStore.user.email }}</span>
           </div>
         </div>
@@ -157,8 +157,13 @@ const walletStore = useWalletStore();
 const categoryStore = useCategoryStore();
 const { theme, toggleTheme } = useTheme();
 
+const isCollapsed = ref(false);
 const showAddTransaction = ref(false);
 const fileInput = ref<HTMLInputElement | null>(null);
+
+function toggleSidebar() {
+  isCollapsed.value = !isCollapsed.value;
+}
 
 function triggerFileUpload() {
   fileInput.value?.click();
@@ -532,5 +537,40 @@ function handleTransactionSaved() {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-10px);
+}
+
+.sidebar.collapsed {
+  width: 80px;
+}
+
+.sidebar.collapsed .sidebar-header {
+  padding: 24px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar.collapsed .logo {
+  justify-content: center;
+}
+
+.sidebar.collapsed .nav-item {
+  justify-content: center;
+  padding: 14px;
+}
+
+.sidebar.collapsed .sidebar-footer {
+  flex-direction: column;
+  padding: 24px 0;
+  gap: 16px;
+}
+
+.sidebar.collapsed .user-card {
+  flex-direction: column;
+  overflow: visible;
+}
+
+.sidebar.collapsed .user-avatar {
+  width: 40px;
+  height: 40px;
 }
 </style>
