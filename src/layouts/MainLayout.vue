@@ -43,12 +43,24 @@
 
       <div class="sidebar-footer">
         <div class="user-card" v-if="authStore.user">
-          <div class="user-avatar">
-            <el-icon><User /></el-icon>
+          <div class="user-avatar" @click="triggerFileUpload">
+            <img
+              v-if="authStore.user.avatar"
+              :src="authStore.user.avatar"
+              alt="Avatar"
+              class="avatar-image"
+            />
+            <el-icon v-else><User /></el-icon>
+            <input
+              type="file"
+              ref="fileInput"
+              accept="image/*"
+              style="display: none"
+              @change="handleFileChange"
+            />
           </div>
           <div class="user-info">
             <span class="user-email">{{ authStore.user.email }}</span>
-            <span class="user-role">Free Plan</span>
           </div>
         </div>
         <el-button class="logout-btn" text @click="handleLogout">
@@ -146,6 +158,31 @@ const categoryStore = useCategoryStore();
 const { theme, toggleTheme } = useTheme();
 
 const showAddTransaction = ref(false);
+const fileInput = ref<HTMLInputElement | null>(null);
+
+function triggerFileUpload() {
+  fileInput.value?.click();
+}
+
+async function handleFileChange(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) return;
+
+  const file = input.files[0];
+  if (file.size > 5 * 1024 * 1024) {
+    alert("File size too large (max 5MB)");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const base64 = e.target?.result as string;
+    if (base64) {
+      await authStore.updateAvatar(base64);
+    }
+  };
+  reader.readAsDataURL(file);
+}
 
 onMounted(async () => {
   await Promise.all([
@@ -313,6 +350,15 @@ function handleTransactionSaved() {
   align-items: center;
   justify-content: center;
   color: var(--text-secondary);
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .user-info {

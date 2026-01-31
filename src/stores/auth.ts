@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { User } from "@/types";
 import { authApi } from "@/api/auth";
+import { userApi } from "@/api/user";
 
 export const useAuthStore = defineStore("auth", () => {
   const user = ref<User | null>(null);
@@ -69,6 +70,18 @@ export const useAuthStore = defineStore("auth", () => {
     localStorage.removeItem("refreshToken");
   }
 
+  async function updateAvatar(avatarBase64: string) {
+    if (!user.value) return;
+    try {
+      const updatedUser = await userApi.updateProfile({ avatar: avatarBase64 });
+      user.value = { ...user.value, ...updatedUser };
+      return updatedUser;
+    } catch (e) {
+      console.error(e);
+      throw e;
+    }
+  }
+
   return {
     user,
     accessToken,
@@ -79,5 +92,6 @@ export const useAuthStore = defineStore("auth", () => {
     login,
     fetchUser,
     logout,
+    updateAvatar,
   };
 });
