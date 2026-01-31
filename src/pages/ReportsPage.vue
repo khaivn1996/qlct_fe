@@ -85,7 +85,15 @@
             class="breakdown-item"
           >
             <div class="breakdown-icon">
+              <img
+                v-if="
+                  item.icon.startsWith('data:') || item.icon.startsWith('http')
+                "
+                :src="item.icon"
+                class="custom-icon-img"
+              />
               <component
+                v-else
                 :is="icons[item.icon] || icons.HelpCircle"
                 :size="20"
               />
@@ -423,6 +431,13 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   color: var(--expense-color);
+  overflow: hidden; /* Ensure img stays inside */
+}
+
+.custom-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .breakdown-info {

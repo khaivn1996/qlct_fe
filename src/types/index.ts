@@ -62,3 +62,17 @@ export interface CreateTransactionDto {
   txnDate: string;
   note?: string;
 }
+
+export interface ExpenseCategorySummary {
+  categoryId: string;
+  name: string;
+  total: string;
+  icon: string;
+}
+
+export interface MonthlyReport {
+  totalIncome: string;
+  totalExpense: string;
+  balance: string;
+  expenseByCategory: ExpenseCategorySummary[];
+}

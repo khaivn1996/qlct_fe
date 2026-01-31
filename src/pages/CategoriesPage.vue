@@ -25,7 +25,16 @@
           :style="{ animationDelay: `${index * 0.05}s` }"
         >
           <div class="category-icon-wrapper expense">
-            <component :is="icons[cat.icon] || icons.HelpCircle" :size="24" />
+            <img
+              v-if="cat.icon.startsWith('data:') || cat.icon.startsWith('http')"
+              :src="cat.icon"
+              class="custom-icon-img"
+            />
+            <component
+              v-else
+              :is="icons[cat.icon] || icons.HelpCircle"
+              :size="24"
+            />
           </div>
           <div class="category-content">
             <div class="category-name">{{ cat.name }}</div>
@@ -60,7 +69,16 @@
           :style="{ animationDelay: `${index * 0.05}s` }"
         >
           <div class="category-icon-wrapper income">
-            <component :is="icons[cat.icon] || icons.HelpCircle" :size="24" />
+            <img
+              v-if="cat.icon.startsWith('data:') || cat.icon.startsWith('http')"
+              :src="cat.icon"
+              class="custom-icon-img"
+            />
+            <component
+              v-else
+              :is="icons[cat.icon] || icons.HelpCircle"
+              :size="24"
+            />
           </div>
           <div class="category-content">
             <div class="category-name">{{ cat.name }}</div>
@@ -116,54 +134,93 @@
         </el-form-item>
 
         <el-form-item label="Icon" prop="icon">
-          <el-popover
-            placement="bottom-start"
-            :width="340"
-            trigger="click"
-            popper-class="glass-popover"
-            :show-arrow="false"
-            transition="el-zoom-in-top"
-          >
-            <template #reference>
-              <div class="icon-select-trigger glass-input">
-                <div class="selected-icon-preview">
-                  <component
-                    :is="icons[form.icon] || icons.HelpCircle"
-                    :size="20"
-                  />
-                </div>
-                <span class="selected-icon-label">{{ form.icon }}</span>
-                <el-icon class="dropdown-chevron"><ArrowDown /></el-icon>
-              </div>
-            </template>
+          <div class="icon-input-tabs">
+            <div
+              class="icon-tab"
+              :class="{ active: iconType === 'library' }"
+              @click="iconType = 'library'"
+            >
+              Thư viện
+            </div>
+            <div
+              class="icon-tab"
+              :class="{ active: iconType === 'upload' }"
+              @click="iconType = 'upload'"
+            >
+              Tải ảnh
+            </div>
+          </div>
 
-            <div class="icon-picker-container">
-              <div class="search-box">
-                <el-input
-                  v-model="searchText"
-                  placeholder="Tìm kiếm icon..."
-                  clearable
-                >
-                  <template #prefix>
-                    <el-icon><Search /></el-icon>
-                  </template>
-                </el-input>
-              </div>
-              <div class="icon-grid-scroll">
-                <div
-                  v-for="iconName in currentIconOptions"
-                  :key="iconName"
-                  class="icon-option"
-                  :class="{ active: form.icon === iconName }"
-                  @click="form.icon = iconName"
-                >
-                  <div class="icon-crate">
-                    <component :is="icons[iconName]" :size="20" />
+          <div v-if="iconType === 'library'">
+            <el-popover
+              placement="bottom-start"
+              :width="340"
+              trigger="click"
+              popper-class="glass-popover"
+              :show-arrow="false"
+              transition="el-zoom-in-top"
+            >
+              <template #reference>
+                <div class="icon-select-trigger glass-input">
+                  <div class="selected-icon-preview">
+                    <component
+                      :is="icons[form.icon] || icons.HelpCircle"
+                      :size="20"
+                    />
+                  </div>
+                  <span class="selected-icon-label">{{ form.icon }}</span>
+                  <el-icon class="dropdown-chevron"><ArrowDown /></el-icon>
+                </div>
+              </template>
+
+              <div class="icon-picker-container">
+                <div class="search-box">
+                  <el-input
+                    v-model="searchText"
+                    placeholder="Tìm kiếm icon..."
+                    clearable
+                  >
+                    <template #prefix>
+                      <el-icon><Search /></el-icon>
+                    </template>
+                  </el-input>
+                </div>
+                <div class="icon-grid-scroll">
+                  <div
+                    v-for="iconName in currentIconOptions"
+                    :key="iconName"
+                    class="icon-option"
+                    :class="{ active: form.icon === iconName }"
+                    @click="form.icon = iconName"
+                  >
+                    <div class="icon-crate">
+                      <component :is="icons[iconName]" :size="20" />
+                    </div>
                   </div>
                 </div>
               </div>
+            </el-popover>
+          </div>
+
+          <div v-else class="upload-container">
+            <div class="upload-box" @click="triggerFileUpload">
+              <div class="upload-preview" v-if="form.icon.startsWith('data:')">
+                <img :src="form.icon" class="preview-img" />
+              </div>
+              <div class="upload-placeholder" v-else>
+                <el-icon :size="24"><Upload /></el-icon>
+                <span>Chọn ảnh (PNG, JPG)</span>
+              </div>
+              <input
+                type="file"
+                ref="fileInput"
+                accept="image/*"
+                style="display: none"
+                @change="handleFileUpload"
+              />
             </div>
-          </el-popover>
+            <div class="upload-hint">Tối đa 2MB.</div>
+          </div>
         </el-form-item>
 
         <el-form-item label="Ghi chú" prop="note">
@@ -203,7 +260,14 @@ import {
   type FormInstance,
   type FormRules,
 } from "element-plus";
-import { Plus, Minus, Delete, ArrowDown, Search } from "lucide-vue-next";
+import {
+  Plus,
+  Minus,
+  Delete,
+  ArrowDown,
+  Search,
+  Upload,
+} from "lucide-vue-next";
 import * as LucideIcons from "lucide-vue-next";
 import { useCategoryStore } from "@/stores/category";
 import type { Category, TransactionType } from "@/types";
@@ -214,6 +278,8 @@ const icons: any = LucideIcons;
 const showAddDialog = ref(false);
 const saving = ref(false);
 const formRef = ref<FormInstance>();
+const iconType = ref<"library" | "upload">("library");
+const fileInput = ref<HTMLInputElement | null>(null);
 
 const searchText = ref("");
 
@@ -245,6 +311,30 @@ const currentIconOptions = computed(() => {
     .filter((name) => name.toLowerCase().includes(lowerSearch))
     .slice(0, 50);
 });
+
+function triggerFileUpload() {
+  fileInput.value?.click();
+}
+
+async function handleFileUpload(event: Event) {
+  const input = event.target as HTMLInputElement;
+  if (!input.files?.length) return;
+
+  const file = input.files[0];
+  if (file.size > 2 * 1024 * 1024) {
+    ElMessage.error("File quá lớn (tối đa 2MB)");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    const base64 = e.target?.result as string;
+    if (base64) {
+      form.icon = base64;
+    }
+  };
+  reader.readAsDataURL(file);
+}
 
 async function handleAdd() {
   if (!formRef.value) return;
@@ -378,6 +468,13 @@ onMounted(() => {
   background: var(--text-tertiary);
   opacity: 0.3;
   transition: all 0.3s ease;
+}
+
+.custom-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px; /* Slightly less than wrapper to fit nicely */
 }
 
 .category-card:hover::before {
@@ -559,5 +656,87 @@ onMounted(() => {
   display: flex;
   justify-content: flex-end;
   gap: 12px;
+}
+
+.icon-input-tabs {
+  display: flex;
+  gap: 8px;
+  background: rgba(15, 23, 42, 0.4);
+  padding: 4px;
+  border-radius: 8px;
+  border: 1px solid var(--border-glass);
+  margin-bottom: 12px;
+}
+
+.icon-tab {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+
+.icon-tab.active {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.upload-container {
+  width: 100%;
+}
+
+.upload-box {
+  width: 100%;
+  height: 120px;
+  border: 2px dashed var(--border-glass);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.upload-box:hover {
+  border-color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+.upload-preview {
+  width: 100%;
+  height: 100%;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.upload-hint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  margin-top: 6px;
+  text-align: center;
 }
 </style>

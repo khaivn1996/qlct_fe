@@ -52,7 +52,20 @@
           >
             <div style="display: flex; align-items: center; gap: 10px">
               <div class="option-icon-wrapper">
+                <img
+                  v-if="
+                    cat.icon.startsWith('data:') || cat.icon.startsWith('http')
+                  "
+                  :src="cat.icon"
+                  style="
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 4px;
+                  "
+                />
                 <component
+                  v-else
                   :is="icons[cat.icon] || icons.HelpCircle"
                   :size="16"
                 />
@@ -298,7 +311,10 @@ watch(
 .option-icon-wrapper {
   display: flex;
   align-items: center;
+  justify-content: center;
   color: var(--text-secondary);
+  width: 20px;
+  height: 20px;
 }
 
 .dialog-actions {
