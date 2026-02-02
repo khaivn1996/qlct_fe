@@ -3,6 +3,7 @@
   "short_name": "Kwallet",
   "start_url": "/",
   "display": "standalone",
+  "purpose": "any maskable",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "icons": [
