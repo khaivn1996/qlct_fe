@@ -203,9 +203,13 @@ const groupedTransactions = computed(() => {
   );
 
   for (const date of sortedDates) {
+    // Sort transactions within each day by id descending (newest first)
+    const dayTransactions = dateMap
+      .get(date)!
+      .sort((a, b) => b.id.localeCompare(a.id));
     groups.push({
       date,
-      transactions: dateMap.get(date)!,
+      transactions: dayTransactions,
     });
   }
 

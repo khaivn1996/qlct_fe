@@ -518,6 +518,7 @@ function handleTransactionSaved() {
 .header-actions {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .wallet-info {
@@ -528,6 +529,9 @@ function handleTransactionSaved() {
   padding: 8px 16px;
   border-radius: 12px;
   border: 1px solid var(--border-glass);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .wallet-name {
@@ -690,13 +694,19 @@ function handleTransactionSaved() {
   }
 
   .main-header {
-    padding: 0 12px;
+    padding: 0 8px;
     justify-content: space-between;
-    gap: 8px; /* Add gap for tight spaces */
+    gap: 8px;
+    height: 64px;
+  }
+
+  .mobile-menu-btn {
+    margin-right: 8px;
+    padding: 6px;
   }
 
   .logo-wrapper {
-    gap: 16px;
+    gap: 12px;
   }
 
   /* Hide "Thêm giao dịch" text on mobile */
@@ -705,26 +715,55 @@ function handleTransactionSaved() {
   }
 
   .add-btn {
-    padding: 0 12px; /* Reduce padding since text is gone */
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    min-width: 44px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .add-btn .el-icon {
+    margin: 0;
   }
 
   /* Make wallet info more compact */
   .wallet-info {
-    gap: 10px;
-    padding: 6px 12px;
+    gap: 8px;
+    padding: 6px 10px;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .wallet-name {
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .wallet-divider {
-    display: none; /* Hide divider on small screens */
+    display: none;
   }
 
   .balance-label {
-    display: none; /* Hide "Số dư" label */
+    display: none;
+  }
+
+  .balance-value {
+    font-size: 14px;
+    white-space: nowrap;
   }
 
   .wallet-balance {
     flex-direction: row;
     align-items: center;
+  }
+
+  .theme-toggle-btn {
+    width: 36px;
+    height: 36px;
+    margin-right: 8px;
   }
 
   /* Show logo in header on mobile if needed, 
