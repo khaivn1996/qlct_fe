@@ -254,7 +254,7 @@ watch(
         form.txnDate = props.transaction.txnDate.split("T")[0];
         form.note = props.transaction.note || "";
       } else {
-        // Add mode
+        // Add mode - always reset to current date
         form.type = "EXPENSE";
         form.categoryId = "";
         form.amount = 0;
@@ -263,6 +263,7 @@ watch(
       }
     }
   },
+  { immediate: true },
 );
 </script>
 

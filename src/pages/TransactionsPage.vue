@@ -86,7 +86,16 @@
             @click="editTransaction(txn)"
           >
             <div class="item-icon-wrapper" :class="txn.type.toLowerCase()">
+              <img
+                v-if="
+                  txn.category.icon.startsWith('data:') ||
+                  txn.category.icon.startsWith('http')
+                "
+                :src="txn.category.icon"
+                class="custom-icon-img"
+              />
               <component
+                v-else
                 :is="icons[txn.category.icon] || icons.HelpCircle"
                 :size="20"
               />
@@ -461,6 +470,13 @@ watch(
 .item-icon-wrapper.income {
   background: rgba(16, 185, 129, 0.1);
   color: var(--success-color);
+}
+
+.custom-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 .item-content {
