@@ -28,17 +28,20 @@ const router = createRouter({
         {
           path: "transactions",
           name: "transactions",
-          component: () => import("@/pages/TransactionsPage.vue"),
+          component: () =>
+            import(/* webpackPrefetch: true */ "@/pages/TransactionsPage.vue"),
         },
         {
           path: "categories",
           name: "categories",
-          component: () => import("@/pages/CategoriesPage.vue"),
+          component: () =>
+            import(/* webpackPrefetch: true */ "@/pages/CategoriesPage.vue"),
         },
         {
           path: "reports",
           name: "reports",
-          component: () => import("@/pages/ReportsPage.vue"),
+          component: () =>
+            import(/* webpackPrefetch: true */ "@/pages/ReportsPage.vue"),
         },
       ],
     },

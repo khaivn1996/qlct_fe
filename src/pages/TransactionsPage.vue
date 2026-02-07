@@ -55,7 +55,7 @@
 
     <!-- Transaction List -->
     <div v-if="loading" class="loading-state">
-      <el-icon class="is-loading" size="40"><Loader2 /></el-icon>
+      <SkeletonLoader :count="5" />
     </div>
 
     <div v-else-if="groupedTransactions.length === 0" class="empty-state">
@@ -137,7 +137,6 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   Wallet,
-  Loader2,
   FileText,
   Trash2,
 } from "lucide-vue-next";
@@ -153,6 +152,7 @@ import {
 } from "@/utils/format";
 import type { Transaction } from "@/types";
 import TransactionDialog from "@/components/TransactionDialog.vue";
+import SkeletonLoader from "@/components/SkeletonLoader.vue";
 
 const transactionStore = useTransactionStore();
 const walletStore = useWalletStore();
@@ -162,6 +162,7 @@ const activeTab = ref("current");
 const loading = ref(false);
 const showEditDialog = ref(false);
 const selectedTransaction = ref<Transaction | undefined>();
+const isInitialMount = ref(true);
 
 const tabs = [
   { label: "Tháng trước", name: "previous" },
@@ -278,14 +279,17 @@ function handleTransactionSaved() {
   walletStore.fetchWallets(); // Refresh balance
 }
 
-onMounted(() => {
-  fetchTransactions();
+onMounted(async () => {
+  await fetchTransactions();
+  isInitialMount.value = false;
 });
 
 watch(
   () => walletStore.currentWallet,
   () => {
-    fetchTransactions();
+    if (!isInitialMount.value) {
+      fetchTransactions();
+    }
   },
 );
 </script>

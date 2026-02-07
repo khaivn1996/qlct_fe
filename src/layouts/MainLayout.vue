@@ -587,8 +587,8 @@ function handleTransactionSaved() {
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition:
-    opacity 0.3s ease,
-    transform 0.3s ease;
+    opacity 0.15s ease,
+    transform 0.15s ease;
 }
 
 .fade-slide-enter-from {
