@@ -102,6 +102,8 @@
 
 * {
   box-sizing: border-box;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 html,
@@ -115,9 +117,12 @@ body {
   font-family: "Outfit", sans-serif;
   background-color: var(--bg-deep);
   color: var(--text-primary);
-  height: 100dvh;
-  height: 100vh; /* Fallback for browsers without dvh support */
+  height: 100vh;
+  height: 100dvh; /* Override for browsers that support dvh */
   overflow: hidden;
+  overscroll-behavior: none;
+  position: fixed;
+  width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
