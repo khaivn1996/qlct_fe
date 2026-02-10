@@ -255,7 +255,7 @@ function handleTransactionSaved() {
 <style scoped>
 .main-layout {
   display: flex;
-  height: 100vh;
+  height: 100%;
   position: relative;
   overflow: hidden;
   background-color: var(--bg-deep); /* Fallback */
@@ -667,7 +667,7 @@ function handleTransactionSaved() {
   .sidebar {
     position: fixed;
     left: -100%;
-    height: 100vh;
+    height: 100%;
     transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.2);
     z-index: 99;
