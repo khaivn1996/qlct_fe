@@ -292,6 +292,7 @@ function handleTransactionSaved() {
 
 .sidebar-header {
   padding: 24px;
+  padding-top: calc(env(safe-area-inset-top, 0px) + 24px);
 }
 
 .logo {
@@ -508,6 +509,7 @@ function handleTransactionSaved() {
 .main-header {
   height: 80px;
   padding: 0 40px;
+  padding-top: env(safe-area-inset-top, 0px);
   display: flex;
   justify-content: flex-end; /* Changed to accommodate new item order if needed, but existing was space-between */
   justify-content: space-between;
