@@ -507,11 +507,9 @@ function handleTransactionSaved() {
 }
 
 .main-header {
-  height: 80px;
-  padding: 0 40px;
-  padding-top: env(safe-area-inset-top, 0px);
+  min-height: 80px;
+  padding: env(safe-area-inset-top, 0px) 40px 0 40px;
   display: flex;
-  justify-content: flex-end; /* Changed to accommodate new item order if needed, but existing was space-between */
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--border-glass);
@@ -696,10 +694,12 @@ function handleTransactionSaved() {
   }
 
   .main-header {
-    padding: 0 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    padding-bottom: 0;
     justify-content: space-between;
     gap: 8px;
-    height: 64px;
+    min-height: 64px;
   }
 
   .mobile-menu-btn {
