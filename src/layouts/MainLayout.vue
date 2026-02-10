@@ -572,7 +572,7 @@ function handleTransactionSaved() {
 }
 
 .add-btn {
-  height: 44px;
+  min-height: 44px;
   padding: 0 24px;
   font-size: 14px;
 }
@@ -717,12 +717,14 @@ function handleTransactionSaved() {
   }
 
   .add-btn {
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    min-height: 40px;
+    height: 40px;
     padding: 0;
-    min-width: 44px;
+    min-width: 40px;
     border-radius: 50%;
     flex-shrink: 0;
+    margin-right: 4px;
   }
 
   .add-btn .el-icon {
