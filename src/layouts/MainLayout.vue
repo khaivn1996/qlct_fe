@@ -507,7 +507,7 @@ function handleTransactionSaved() {
 }
 
 .main-header {
-  min-height: 80px;
+  min-height: calc(env(safe-area-inset-top, 0px) + 80px);
   padding: env(safe-area-inset-top, 0px) 40px 0 40px;
   display: flex;
   justify-content: space-between;
@@ -699,7 +699,7 @@ function handleTransactionSaved() {
     padding-bottom: 0;
     justify-content: space-between;
     gap: 8px;
-    min-height: 64px;
+    min-height: calc(env(safe-area-inset-top, 0px) + 56px);
   }
 
   .mobile-menu-btn {
