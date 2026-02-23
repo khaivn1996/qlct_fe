@@ -80,7 +80,7 @@
 
         <div class="category-breakdown">
           <div
-            v-for="item in report.expenseByCategory"
+            v-for="(item, index) in report.expenseByCategory"
             :key="item.categoryId"
             class="breakdown-item"
           >
@@ -103,7 +103,10 @@
               <div class="progress-bar">
                 <div
                   class="progress-fill"
-                  :style="{ width: `${getPercentage(item.total)}%` }"
+                  :style="{
+                    width: '100%',
+                    background: CHART_COLORS[index % CHART_COLORS.length],
+                  }"
                 ></div>
               </div>
             </div>
@@ -128,6 +131,7 @@ import {
   TitleComponent,
   TooltipComponent,
   LegendComponent,
+  GraphicComponent,
 } from "echarts/components";
 import { CanvasRenderer } from "echarts/renderers";
 import VChart from "vue-echarts";
@@ -143,12 +147,26 @@ import { reportApi } from "@/api/report";
 import { formatCurrency, formatMonth } from "@/utils/format";
 import type { MonthlyReport } from "@/types";
 
+const CHART_COLORS = [
+  "#ef4444", // Red
+  "#f97316", // Orange
+  "#f59e0b", // Amber
+  "#84cc16", // Lime
+  "#10b981", // Emerald
+  "#06b6d4", // Cyan
+  "#3b82f6", // Blue
+  "#8b5cf6", // Violet
+  "#d946ef", // Fuchsia
+  "#f43f5e", // Rose
+];
+
 // Register ECharts components
 use([
   EChartsPie,
   TitleComponent,
   TooltipComponent,
   LegendComponent,
+  GraphicComponent,
   CanvasRenderer,
 ]);
 
@@ -181,34 +199,60 @@ const chartOption = computed(() => {
   return {
     tooltip: {
       trigger: "item",
+      confine: true,
       formatter: (params: any) => {
-        return `${params.name}: ${formatCurrency(params.value)} (${params.percent}%)`;
+        return `
+          <div style="font-family: 'Be Vietnam Pro', sans-serif; padding: 4px;">
+            <div style="font-size: 12px; color: #94a3b8; margin-bottom: 4px;">${params.name}</div>
+            <div style="font-size: 14px; font-weight: bold; color: #f8fafc;">
+              ${formatCurrency(params.value)} (${params.percent}%)
+            </div>
+          </div>
+        `;
       },
-      backgroundColor: "rgba(15, 23, 42, 0.9)",
+      backgroundColor: "rgba(15, 23, 42, 0.95)",
       borderColor: "rgba(255, 255, 255, 0.1)",
+      borderWidth: 1,
+      padding: 8,
       textStyle: {
-        color: "#fff",
+        color: "#f8fafc",
       },
     },
     legend: {
-      orient: isMobile ? "horizontal" : "vertical",
-      right: isMobile ? "center" : 0,
-      bottom: isMobile ? 0 : "center",
-      top: isMobile ? "bottom" : "center",
-      textStyle: {
-        color: "#94a3b8",
-        fontSize: 12,
-      },
-      itemWidth: 12,
-      itemHeight: 12,
-      padding: [0, 0, 0, 0],
+      show: false,
     },
+    graphic: [
+      {
+        type: "text",
+        left: "center",
+        top: "42%",
+        style: {
+          text: "Tổng chi",
+          textAlign: "center",
+          fill: "#94a3b8",
+          fontSize: isMobile ? 12 : 14,
+          fontWeight: 500,
+        },
+      },
+      {
+        type: "text",
+        left: "center",
+        top: "52%",
+        style: {
+          text: formatCurrency(report.value.totalExpense),
+          textAlign: "center",
+          fill: "#f8fafc",
+          fontSize: isMobile ? 16 : 22,
+          fontWeight: "bold",
+        },
+      },
+    ],
     series: [
       {
         name: "Chi tiêu",
         type: "pie",
-        radius: isMobile ? ["40%", "65%"] : ["50%", "80%"],
-        center: isMobile ? ["50%", "45%"] : ["30%", "50%"],
+        radius: isMobile ? ["65%", "90%"] : ["65%", "90%"],
+        center: ["50%", "50%"],
         avoidLabelOverlap: false,
         itemStyle: {
           borderRadius: 8,
@@ -237,30 +281,9 @@ const chartOption = computed(() => {
         data,
       },
     ],
-    color: [
-      "#ef4444", // Red
-      "#f97316", // Orange
-      "#f59e0b", // Amber
-      "#84cc16", // Lime
-      "#10b981", // Emerald
-      "#06b6d4", // Cyan
-      "#3b82f6", // Blue
-      "#8b5cf6", // Violet
-      "#d946ef", // Fuchsia
-      "#f43f5e", // Rose
-    ],
+    color: CHART_COLORS,
   };
 });
-
-const totalExpense = computed(() => {
-  if (!report.value) return 0;
-  return parseInt(report.value.totalExpense);
-});
-
-function getPercentage(amount: string): number {
-  if (totalExpense.value === 0) return 0;
-  return Math.round((parseInt(amount) / totalExpense.value) * 100);
-}
 
 async function fetchReport() {
   loading.value = true;
@@ -389,8 +412,11 @@ onMounted(() => {
 }
 
 .chart-container {
-  height: 350px;
-  margin-bottom: 32px;
+  height: 400px;
+  margin-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .chart {
@@ -423,8 +449,8 @@ onMounted(() => {
 }
 
 .breakdown-icon {
-  width: 40px;
-  height: 40px;
+  /* width: 64px;
+  height: 64px; */
   border-radius: 10px;
   background: rgba(239, 68, 68, 0.1);
   display: flex;
@@ -435,9 +461,9 @@ onMounted(() => {
 }
 
 .custom-icon-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
 }
 
 .breakdown-info {
@@ -452,9 +478,10 @@ onMounted(() => {
 }
 
 .progress-bar {
-  height: 6px;
+  height: 4px;
+  width: 40px;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+  border-radius: 2px;
   overflow: hidden;
 }
 

@@ -447,8 +447,8 @@ watch(
 .transaction-item {
   display: flex;
   align-items: center;
-  padding: 16px;
-  gap: 16px;
+  padding: 12px;
+  gap: 12px;
   cursor: pointer;
   border-radius: 16px;
 }
@@ -489,22 +489,37 @@ watch(
 
 .item-content {
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .item-name {
-  font-weight: 600;
+  font-weight: 500;
   font-size: 15px;
   margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .item-note {
   font-size: 12px;
   color: var(--text-secondary);
+  font-weight: 400;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .item-amount {
-  font-weight: 700;
-  font-size: 16px;
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  text-align: right;
+  flex-shrink: 0;
 }
 
 .item-amount.income {

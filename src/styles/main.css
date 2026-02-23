@@ -113,7 +113,7 @@ body {
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
-  font-family: "Outfit", sans-serif;
+  font-family: "Be Vietnam Pro", sans-serif;
   background-color: var(--bg-deep);
   color: var(--text-primary);
   height: 100vh;
@@ -204,7 +204,7 @@ body {
 }
 .el-input__inner {
   color: var(--text-primary) !important;
-  font-family: "Outfit", sans-serif !important;
+  font-family: "Be Vietnam Pro", sans-serif !important;
 }
 
 /* Buttons */
