@@ -165,6 +165,7 @@ const selectedTransaction = ref<Transaction | undefined>();
 const isInitialMount = ref(true);
 
 const tabs = [
+  { label: "Tất cả", name: "all" },
   { label: "Tháng trước", name: "previous" },
   { label: "Tháng này", name: "current" },
   { label: "Tương lai", name: "future" },
@@ -173,7 +174,10 @@ const tabs = [
 const today = new Date();
 
 const dateRange = computed(() => {
-  if (activeTab.value === "previous") {
+  if (activeTab.value === "all") {
+    // Lấy toàn bộ dữ liệu từ trước tới nay
+    return { from: "2026-01-01", to: "2099-12-31" };
+  } else if (activeTab.value === "previous") {
     return getMonthRange(getPreviousMonth(today));
   } else if (activeTab.value === "future") {
     const future = getNextMonth(today);
